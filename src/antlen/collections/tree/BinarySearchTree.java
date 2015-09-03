@@ -2,7 +2,10 @@ package antlen.collections.tree;
 
 import antlen.collections.Collection;
 
+import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * Created by antlen on 01/09/2015 22:16.
@@ -12,33 +15,23 @@ public class BinarySearchTree implements Collection {
     private Node root;
 
     public static BinarySearchTree toTree(int[] arr){
-       // int[] arr = {1, 3,7,9,12,15,19, 25};
         BinarySearchTree tree = new BinarySearchTree();
-        tree.root = new Node(arr[0]);
-        addToTree(arr, tree.root, 1, arr.length);
+
+        tree.root= createMinimalBST(arr, 0, arr.length - 1);
+
         return tree;
     }
 
-    private static void addToTree(int[] arr, Node n, int start, int end){
-        if(start == end || start > end){
-            return;
+
+    private static Node createMinimalBST(int arr[], int start, int end){
+        if (end < start) {
+            return null;
         }
-
-        n.left=new Node(arr[start]);
-
-        if(start+1==end && end >= arr.length) return;
-
-        int length = end - start;
-        if(length == 1){
-            n.right=new Node(arr[(end)]);
-            return;
-        }
-
-        int half = start + (int)Math.floor(length/ 2);
-        n.right=new Node(arr[(half)]);
-        addToTree(arr, n.left, start +1, half-1);
-        addToTree(arr, n.right, half+1, end);
-
+        int mid = (start + end) / 2;
+        Node n = new Node(arr[mid]);
+        n.left=createMinimalBST(arr, start, mid - 1);
+        n.right=createMinimalBST(arr, mid + 1, end);
+        return n;
     }
 
     @Override
@@ -47,47 +40,86 @@ public class BinarySearchTree implements Collection {
         if(root == null){
             root = newNode;
             return true;
-        }else if(i < root.value){
-            newNode.left=root;
-            root=newNode;
-            return true;
         }
         else{
-            return insert(root, newNode);
+            insert(root, newNode);
+            return true;
         }
     }
 
-    private boolean insert(Node n, Node newNode){
+    private void insert(Node n, Node newNode){
+        if(newNode == null) return;
+
         final int i = newNode.value;
         if((n.left!=null && n.left.value==i) || (n.right!=null && n.right.value==i)){
-            return false;
-        }
-        if(n.left == null){
-            n.left=newNode;
-            return true;
-        }else if(n.right==null){
-            if(i > n.left.value) {
-                n.right = newNode;
-            }else{
-                n.right=n.left;
-                n.left=newNode;
-            }
-            return true;
-        }else if(i < n.left.value){
-            newNode.left=n.left;
-            n.left=newNode;
-            return true;
-        }else if(i < n.right.value){
-            newNode.right=n.right;
-            n.right=newNode;
-            return true;
-        }else if(i > n.right.value){
-            return insert(n.right, newNode);
-        }else if(i > n.left.value){
-            return insert(n.left, newNode);
+            return;
         }
 
-        return false;
+        if(newNode.value < n.value){
+            if(n.left == null){
+                n.left=newNode;
+            }
+            else if(n.left.value < newNode.value){
+                newNode.left=n.left;
+                n.left=newNode;
+                swapEdges(n);
+            }else if(n.right== null) {
+                n.right=n.left;
+                n.left=newNode;
+                swapEdges(n);
+            }
+            else{
+                insert(n.left, newNode);
+            }
+        }else if(newNode.value > n.value){
+            if(n.right == null){
+                n.right=newNode;
+            }
+            else if(n.right.value > newNode.value){
+                newNode.right=n.right;
+                n.right=newNode;
+                swapEdges(n);
+            }else if(n.left== null) {
+                n.left=n.right;
+                n.right=newNode;
+                swapEdges(n);
+            }else{
+                insert(n.right, newNode);
+            }
+        }
+    }
+
+    private void swapEdges(Node parent){
+
+        Node[] nodes = new Node[4];
+        if(parent.left.value > parent.right.value){
+            Node tmp = parent.left;
+            parent.left=parent.right;
+            parent.right=tmp;
+        }
+        addToArrayAndClear(parent.left, nodes, 0);
+        addToArrayAndClear(parent.right, nodes, 2);
+
+        for(Node nn : nodes){
+            insert(root, nn);
+        }
+    }
+
+    private void addToArrayAndClear(Node n, Node[] nodes, int index) {
+        if(n != null) {
+            nodes[index++]=n.left;
+            nodes[index++]=n.right;
+            n.left = null;
+            n.right = null;
+        }
+    }
+
+    private boolean lt(Node left, Node child) {
+        return child != null && child.value < left.value;
+    }
+
+    private boolean gt(Node right, Node child) {
+        return child != null && child.value > right.value;
     }
 
     public boolean isBalanced(){
@@ -111,7 +143,6 @@ public class BinarySearchTree implements Collection {
 
         int value =  Math.max(left, right) +1;
 
-        System.out.println(value +"\t "+ n.value);
         return value;
     }
 
@@ -125,6 +156,28 @@ public class BinarySearchTree implements Collection {
         return null;
     }
 
+
+    @Override
+    public String toString() {
+        Queue<Node> q = new ArrayDeque<>();
+        q.add(root);
+        return print(q, new StringBuilder()).toString();
+    }
+
+    private StringBuilder print(Queue<Node> queue, StringBuilder builder){
+
+        Node n = null;
+        while(( n = queue.poll()) !=null ){
+
+            builder.append(n.value).append(" ,");
+
+
+            if(n.left !=null) queue.add(n.left);
+            if(n.right !=null) queue.add(n.right);
+        }
+        builder.deleteCharAt(builder.length()-1);
+        return builder;
+    }
 
     private static class Node{
         protected int value;
@@ -141,6 +194,10 @@ public class BinarySearchTree implements Collection {
         @Override
         public String toString() {
             return Integer.toString(value);
+        }
+
+        public boolean hasChildren(){
+            return left  != null || right !=null;
         }
     }
 }
