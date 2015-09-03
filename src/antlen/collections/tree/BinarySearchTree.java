@@ -114,13 +114,6 @@ public class BinarySearchTree implements Collection {
         }
     }
 
-    private boolean lt(Node left, Node child) {
-        return child != null && child.value < left.value;
-    }
-
-    private boolean gt(Node right, Node child) {
-        return child != null && child.value > right.value;
-    }
 
     public boolean isBalanced(){
         int balance =  checkHeight(root, 1);
@@ -129,6 +122,12 @@ public class BinarySearchTree implements Collection {
         return balance != -1;
     }
 
+    /**
+     * DFS check height.
+     * @param n
+     * @param tolerance
+     * @return
+     */
     private int checkHeight(Node n, int tolerance){
         if(n == null) return 0;
 
@@ -164,6 +163,12 @@ public class BinarySearchTree implements Collection {
         return print(q, new StringBuilder()).toString();
     }
 
+    /**
+     * BFS toString
+     * @param queue
+     * @param builder
+     * @return
+     */
     private StringBuilder print(Queue<Node> queue, StringBuilder builder){
 
         Node n = null;
