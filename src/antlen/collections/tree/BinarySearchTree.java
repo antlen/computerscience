@@ -9,10 +9,30 @@ import java.util.*;
  */
 public class BinarySearchTree extends BinaryTree implements Collection {
 
+    public BinarySearchTree() {
+        super();
+    }
+
+    public BinarySearchTree(int[] arr) {
+        super(arr);
+    }
+
+    public Node findNodeForValue(int i){
+        return findNodeForValue(root, i);
+    }
+
+    private Node findNodeForValue(Node n, int i){
+        if(n == null) return null;
+        if(n.value == i) return n;
+        if(n.value > i)
+            return findNodeForValue(n.left,i);
+        else
+            return findNodeForValue(n.right,i);
+    }
 
     @Override
     public boolean add(int i) {
-        final Node newNode = new Node(i);
+        final Node newNode = create(i);
         if(root == null){
             root = newNode;
             return true;
@@ -34,6 +54,7 @@ public class BinarySearchTree extends BinaryTree implements Collection {
         if(newNode.value < n.value){
             if(n.left == null){
                 n.left=newNode;
+                newNode.parent=n;
             }
             else{
                 insert(n.left, newNode);
@@ -41,6 +62,7 @@ public class BinarySearchTree extends BinaryTree implements Collection {
         }else if(newNode.value > n.value){
             if(n.right == null){
                 n.right=newNode;
+                newNode.parent=n;
             }
             else{
                 insert(n.right, newNode);
@@ -48,7 +70,7 @@ public class BinarySearchTree extends BinaryTree implements Collection {
         }
     }
 
-    private void swapEdges(Node parent){
+    /*private void swapEdges(Node parent){
 
         Node[] nodes = new Node[4];
         if(parent.left != null && parent.right != null && parent.left.value > parent.right.value){
@@ -72,7 +94,7 @@ public class BinarySearchTree extends BinaryTree implements Collection {
             n.right = null;
         }
     }
-
+*/
 
     @Override
     public boolean remove(int t) {

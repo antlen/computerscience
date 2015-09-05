@@ -2,33 +2,73 @@ package antlen.collections.tree;
 
 import antlen.collections.Collection;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.*;
 
 /**
  * Created by antlen on 01/09/2015 22:16.
  */
-public class BinaryTree {
+public class BinaryTree implements Externalizable {
 
     protected Node root;
+    private int size =0;
 
-    public static BinaryTree toTree(int[] arr){
-        BinaryTree tree = new BinaryTree();
-
-        tree.root= createMinimalBST(arr, 0, arr.length - 1);
-
-        return tree;
+    protected BinaryTree(){
     }
 
+    public BinaryTree(int[] arr){
+        root= createMinimalBST(arr, 0, arr.length - 1);
+    }
 
-    private static Node createMinimalBST(int arr[], int start, int end){
+    private Node createMinimalBST(int arr[], int start, int end){
         if (end < start) {
             return null;
         }
         int mid = (start + end) / 2;
-        Node n = new Node(arr[mid]);
+        Node n = create(arr[mid]);
         n.left=createMinimalBST(arr, start, mid - 1);
         n.right=createMinimalBST(arr, mid + 1, end);
+        if(n.left!=null) n.left.parent=n;
+        if(n.right!=null) n.right.parent=n;
         return n;
+    }
+
+    public int[] createOrderedArray(){
+        int[] arr = new int[size];
+        createOrderedArray(root, arr, 0, size-1);
+        return arr;
+    }
+
+    private void createOrderedArray(Node n, int arr[], int start, int end){
+        if (start > end) {
+            return;
+        }
+        int index = (start + end) / 2;
+        arr[index]=n.value;
+        createOrderedArray(n.left, arr, start, index - 1);
+        createOrderedArray(n.right, arr, index + 1, end);
+
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        int[] arr = createOrderedArray();
+        for(int i =0; i < arr.length; i ++){
+            out.writeInt(arr[i]);
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        int[] arr = new int[in.available()/4];
+        int index = 0;
+        while(in.available()>=4){
+            arr[index++]=in.readInt();
+        }
+        root= createMinimalBST(arr, 0, arr.length - 1);
     }
 
     public boolean isBinarySearchTree() {
@@ -42,19 +82,13 @@ public class BinaryTree {
     private boolean validateLt(Node n, int value){
          if(n==null) return true;
 
-
-        boolean v = n.value <= value;
-        System.out.println(n.value + " is " + (v ? "less than " : "more than ") + value);
-        return v && isBinarySearchTree(n);
+        return n.value <= value && isBinarySearchTree(n);
     }
 
     private boolean validateGt(Node n, int value){
         if(n==null) return true;
 
-
-        boolean v = n.value >= value;
-        System.out.println(n.value + " is " + (!v ? "less than " : "more than ") + value);
-        return v && isBinarySearchTree(n);
+        return n.value >= value && isBinarySearchTree(n);
 
     }
 
@@ -134,18 +168,52 @@ public class BinaryTree {
             if(n.left !=null) queue.add(n.left);
             if(n.right !=null) queue.add(n.right);
         }
-        builder.deleteCharAt(builder.length()-1);
+        builder.deleteCharAt(builder.length() - 1);
         return builder;
     }
 
-    public static class Node{
-        protected int value;
+    protected Node create(int i){
+        size++;
+        return new Node(i);
+    }
+
+    protected Node create(Node parent, int i){
+        size++;
+        return new Node(parent, i);
+    }
+
+    public Node findCommonAncestor(Node n1, Node n2){
+
+        Node n = n1;
+        while(n!=null && !isOnBranch(n, n2)){
+            n =n.parent;
+        }
+
+        return n;
+    }
+
+    public boolean isOnBranch(Node branchParent, Node n){
+        if(branchParent==null) return false;
+        if(branchParent==n) return true;
+
+        return isOnBranch(branchParent.left, n) || isOnBranch(branchParent.right, n);
+    }
+
+    public class Node{
+        protected final int value;
+        protected Node parent;
         protected Node left;
         protected Node right;
 
-        protected Node(int value) {
+        private Node(int value) {
             this.value = value;
         }
+
+        private Node(Node parent, int value) {
+            this.parent=parent;
+            this.value = value;
+        }
+
         @Override
         public String toString() {
             return Integer.toString(value);
