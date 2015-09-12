@@ -12,9 +12,15 @@ public class TestHarness {
 
 
     public static void main(String [] arg){
-        int maxIteration = 1000;
-        Sorter[] sorters = {new BubbleSort(),new OptmizedBubbleSort(), new SelectionSort(), new QuickSort(), new InsertionSort()};
-        //Sorter[] sorters = {new InsertionSort()};
+        int maxIteration = 100;
+        Sorter[] sorters = {new BubbleSort(),new OptmizedBubbleSort(), new SelectionSort(), new QuickSort(), new InsertionSort(), new MergeSort()};
+       // Sorter[] sorters = {new MergeSort()};
+
+      //  int[] arr = Util.SHUFFLE.build(20);
+       // System.out.println("raw  = " + Arrays.toString(arr));
+    //    new MergeSort().sort(arr);
+     //   System.exit(0);
+
         for(Sorter sorter : sorters) {
             print("Shuffled", sorter, maxIteration, Util.SHUFFLE);
         }
@@ -64,7 +70,9 @@ public class TestHarness {
 
     private static class Result{
         private Result(int size){
+
             time = new long[size];
+            this.size = new long[size];
         }
         public int[] array;
         public long[] time;

@@ -17,42 +17,35 @@ public class Util {
         a[index2] ^= a[index];
     }
 
-    public static final ArrayFactory SORTED = new ArrayFactory(){
-        @Override
-        public int[] build(int size) {
-            final int[] arr = new int[size];
-            for(int i = 0; i < size; i++)
-            {
-                arr[i]=i;
-            }
-            return arr;
+    public static final ArrayFactory SORTED = (int size) -> {
+        final int[] arr = new int[size];
+        for(int i = 0; i < size; i++)
+        {
+            arr[i]=i;
         }
+        return arr;
     };
 
-    public static final ArrayFactory REVERSE = new ArrayFactory(){
-        @Override
-        public int[] build(int size) {
-            int[]  a = SORTED.build(size);
-            for(int i =0; i < a.length /2; i++){
-                Util.swap(a, a.length-i-1, i);
-            }
-            return a;
+
+    public static final ArrayFactory REVERSE = (int size) -> {
+        int[]  a = SORTED.build(size);
+        for(int i =0; i < a.length /2; i++){
+            Util.swap(a, a.length-i-1, i);
         }
+        return a;
     };
 
-    public static final ArrayFactory SHUFFLE = new ArrayFactory(){
-        private final Random random = new Random();
-        @Override
-        public int[] build(int size) {
-            int[]  a = SORTED.build(size);
-            for(int i=0; i < a.length; i++){
-                int index = random.nextInt(i +1);
-                if(1 !=index) {
-                    Util.swap(a, i, index);
-                }
+    public static final ArrayFactory SHUFFLE = (int size) -> {
+        final Random random = new Random();
+
+        int[]  a = SORTED.build(size);
+        for(int i=0; i < a.length; i++){
+            int index = random.nextInt(i +1);
+            if(1 !=index) {
+                Util.swap(a, i, index);
             }
-            return a;
         }
+        return a;
     };
 
 
