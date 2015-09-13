@@ -8,7 +8,7 @@ import java.util.Iterator;
 /**
  * Created by antlen on 12/9/15.
  */
-public class SingleLinkedList implements Collection {
+public class SingleLinkedList implements Collection{
     protected Node head, tail;
 
     public SingleLinkedList(){
@@ -74,11 +74,12 @@ public class SingleLinkedList implements Collection {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder("[");
-        Node n = head;
-        do{
-            b.append(n.value);
-            if(n.next !=null)b.append(",");
-        }while((n = n.next) !=null);
+        Iterator<Node> i = iterator();
+        while(i.hasNext()){
+            b.append(i.next().value);
+            if(i.hasNext())b.append(",");
+        }
+
         b.append("]");
 
         return b.toString();
@@ -92,7 +93,7 @@ public class SingleLinkedList implements Collection {
         do{
             if(index>=k){
                 if(nn==null){
-                    nn= head;
+                    nn=head;
                 }else {
                     nn = nn.next;
                 }

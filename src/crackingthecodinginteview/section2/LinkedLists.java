@@ -8,14 +8,23 @@ import antlen.collections.list.SingleLinkedList;
 public class LinkedLists {
 
     public static void main (String [] args){
-        test_1_2();
+        test_basic();
+    }
+
+    public static void test_basic(){
+        SingleLinkedList ll = new SingleLinkedList(new int[]{1,3,5,3,1,6,7,6,5,5,4,3,9});
+        System.out.println(ll);
+        ll.remove(7);
+        System.out.println(ll);
+        ll.remove(6);
+        System.out.println(ll);
     }
 
     public static void test_1_1(){
         SingleLinkedList ll = new SingleLinkedList(new int[]{1,3,5,3,1,6,7,6,5,5,4,3,9});
 
         System.out.println(ll);
-        ll.removeDuplicates();;
+        ll.removeDuplicates();
         System.out.println(ll);
     }
 
