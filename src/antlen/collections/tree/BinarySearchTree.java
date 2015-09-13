@@ -21,7 +21,8 @@ public class BinarySearchTree extends BinaryTree implements Collection {
         return findNodeForValue(root, i);
     }
 
-    private Node findNodeForValue(Node n, int i){
+    @Override
+    protected Node findNodeForValue(Node n, int i){
         if(n == null) return null;
         if(n.value == i) return n;
         if(n.value > i)

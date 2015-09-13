@@ -20,6 +20,10 @@ public class TreesAndGraphsSoltions {
     public static final int[] DEFAULT_ARR = new int[]{10, 15, 8, 20, 30, 17, 5, 9, 3, 7, 4, 16};
 
     public static void main(String args[]){
+        test_4_8();
+
+        System.exit(0);
+
         test_4_7();
 
 
@@ -72,8 +76,26 @@ public class TreesAndGraphsSoltions {
 
     }
 
+    public static void test_4_8(){
+        System.out.println("------------------------4.8------------------------");
+        int[] arr = {3,4,5,7,8,9,10,15,16,17,20,25,30, 40, 33, 37, 55, 49, 52, 60, 67};
+        BinarySearchTree tree = new BinarySearchTree(arr);
+
+        BinarySearchTree tree2 = new BinarySearchTree(new int[]{3,4,6,8,12,15,18,24,26,29,30,33,38,49,55,58,59,60,78,88});
+        print(tree);
+
+        BinaryTree.Node n2 = tree.findNodeForValue(30);
+
+        System.out.println("is SubTree = " +    tree.isSubTree(n2));
+
+        System.out.println("is SubTree = " +    tree2.isSubTree(n2));
+
+        System.out.println("--------------------------------------------------");
+    }
+
+
     public static void test_4_7(){
-        System.out.println("------------------------4.5------------------------");
+        System.out.println("------------------------4.7------------------------");
         int[] arr = {3,4,5,7,8,9,10,15,16,17,20,25,30, 40, 33, 37, 55, 49, 52, 60, 67};
         BinarySearchTree tree = new BinarySearchTree(arr);
         print(tree);

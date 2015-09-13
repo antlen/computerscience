@@ -92,10 +92,31 @@ public class BinaryTree implements Externalizable {
 
     }
 
+    protected Node findNodeForValue(Node n, int i){
+        if(n == null) return null;
+        if(n.value == i) return n;
+        Node nn = findNodeForValue(n.left,i);
+        if(nn!=null) return nn;
+
+        return findNodeForValue(n.right,i);
+    }
+
+    public boolean isSubTree(Node n){
+        return isIdenticle(n, findNodeForValue(root, n.value));
+
+    }
+
+    public boolean isIdenticle(Node n, Node nn){
+        if(n == null && nn == null) return true;
+
+        if(n==null || nn==null || n.value != nn.value) return false;
+
+        return isIdenticle(n.left, nn.left) && isIdenticle(n.right, nn.right);
+    }
+
     public boolean isBalanced(){
         int balance =  checkHeight(root, 1);
 
-        System.out.println(balance);
         return balance != -1;
     }
 
