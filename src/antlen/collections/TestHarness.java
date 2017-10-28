@@ -16,10 +16,10 @@ public class TestHarness {
         Sorter[] sorters = {new BubbleSort(),new OptmizedBubbleSort(), new SelectionSort(), new QuickSort(), new InsertionSort(), new MergeSort()};
        // Sorter[] sorters = {new MergeSort()};
 
-      //  int[] arr = Util.SHUFFLE.build(20);
-       // System.out.println("raw  = " + Arrays.toString(arr));
-    //    new MergeSort().sort(arr);
-     //   System.exit(0);
+        int[] arr = Util.SHUFFLE.build(300);
+        System.out.println("raw  = " + Arrays.toString(arr));
+        new RadixSort().sort(arr);
+        System.exit(0);
 
         for(Sorter sorter : sorters) {
             print("Shuffled", sorter, maxIteration, Util.SHUFFLE);

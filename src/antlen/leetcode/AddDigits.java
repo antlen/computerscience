@@ -7,7 +7,7 @@ public class AddDigits {
 
         public static void main(String [] a){
             AddDigits ad = new AddDigits();
-            System.out.println(ad.addDigits(38));
+            System.out.println(ad.addDigits(184));
         }
 
         public int addDigits(int num) {
